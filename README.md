@@ -50,6 +50,7 @@ Dependencies, installed however the platform prefers:
 | `fzf` | `Ctrl-R` / `Ctrl-T` / `Alt-C` |
 | `ripgrep` | fzf's file source |
 | `jq` | the Claude status line |
+| `gh` | git credential helper for github.com over HTTPS |
 | `powerline-shell` | the prompt, via `pipx install powerline-shell` |
 | `xclip` or `wl-copy` | tmux clipboard on Linux |
 | `fonts-powerline` | the prompt's separator glyphs on Linux |

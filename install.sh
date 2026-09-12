@@ -48,7 +48,7 @@ fi
 # Dependencies
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 missing=""
-for c in zsh tmux vim git jq fzf rg powerline-shell; do
+for c in zsh tmux vim git gh jq fzf rg powerline-shell; do
     command -v "$c" > /dev/null 2>&1 || missing="$missing $c"
 done
 if [ "$OS" != "Darwin" ]; then
