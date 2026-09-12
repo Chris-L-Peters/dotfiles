@@ -10,19 +10,18 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'joshdick/onedark.vim'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
 Plug 'preservim/nerdcommenter'
-Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
-Plug 'vim-scripts/a.vim'
 
 call plug#end()
 
 " Windows and Appearance
 "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 " Colours
-colorscheme onedark
+try
+    colorscheme onedark
+catch /^Vim\%((\a\+)\)\=:E185/
+endtry
 let g:airline_theme='onedark'
 let g:airline_powerline_fonts = 1
 set nu rnu
@@ -69,7 +68,6 @@ noremap <Leader>p "0p
 vnoremap <Leader>p "0p
 set completeopt=longest,menuone
 inoremap <expr> <CR> pumvisible() ? "<C-y>" : "\<C-g>u\<CR>"
-autocmd BufReadPost,FileReadPost,BufNewFile * call system("tmux rename-window " . expand("%"))
 
 " Movement
 "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -87,15 +85,9 @@ let g:netrw_keepdir=0
 
 " NERDCommenter
 "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-map <C-_> <plug>NERDCommenterToggle
-
-" A.vim
-"||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-let g:alternateExtensions_hpp = "ipp,cpp"
-let g:alternateExtensions_ipp = "cpp,hpp"
-map S :A<CR>
-
-" fzf
-"||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-nnoremap <C-p> :Files<Cr>
-
+nmap <Leader>/ <Plug>NERDCommenterToggle
+vmap <Leader>/ <Plug>NERDCommenterToggle
+nmap <C-_> <Plug>NERDCommenterToggle
+vmap <C-_> <Plug>NERDCommenterToggle
+nmap <C-/> <Plug>NERDCommenterToggle
+vmap <C-/> <Plug>NERDCommenterToggle

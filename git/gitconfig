@@ -1,0 +1,18 @@
+[user]
+	name = Chris Peters
+	email = chris.lyle.peters@gmail.com
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = true
+
+[push]
+	autoSetupRemote = true
+
+[core]
+	editor = vim
+
+[diff]
+	colorMoved = zebra

@@ -1,0 +1,5 @@
+# vim/editor swap and backup files
+*.swp
+*.swo
+*~
+.DS_Store

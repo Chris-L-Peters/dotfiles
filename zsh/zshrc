@@ -1,0 +1,122 @@
+# General
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+typeset -U path
+
+if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv zsh)"
+fi
+
+setopt NO_BEEP
+setopt INTERACTIVE_COMMENTS
+setopt AUTO_CD
+
+# History
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+
+setopt EXTENDED_HISTORY
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY
+
+# Completion
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# Key bindings
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+bindkey -e
+
+WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
+
+bindkey '^U' backward-kill-line
+
+bindkey '^[[1~' beginning-of-line
+bindkey '^[[H'  beginning-of-line
+bindkey '^[OH'  beginning-of-line
+bindkey '^[[4~' end-of-line
+bindkey '^[[F'  end-of-line
+bindkey '^[OF'  end-of-line
+bindkey '^[[3~' delete-char
+
+bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
+bindkey '^[[1;3C' forward-word
+bindkey '^[[1;3D' backward-word
+
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X^E' edit-command-line
+
+if [[ -t 0 ]]; then
+    stty -ixon
+fi
+
+# Aliases
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit -v'
+
+if ls --color=auto > /dev/null 2>&1; then
+    alias ll='ls -lAh --color=auto'
+else
+    alias ll='ls -lAhG'
+fi
+
+# fzf
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+if command -v fzf > /dev/null 2>&1; then
+    if fzf --zsh > /dev/null 2>&1; then
+        source <(fzf --zsh)
+    else
+        for _f in /usr/share/doc/fzf/examples/key-bindings.zsh \
+                  /usr/share/fzf/key-bindings.zsh \
+                  /usr/share/zsh/site-functions/fzf-key-bindings.zsh \
+                  /usr/share/doc/fzf/examples/completion.zsh \
+                  /usr/share/fzf/completion.zsh; do
+            [ -r "$_f" ] && source "$_f"
+        done
+        unset _f
+    fi
+
+    if command -v rg > /dev/null 2>&1; then
+        export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    fi
+
+    export FZF_DEFAULT_OPTS='--height 40% --layout reverse --border
+        --color=fg:145,hl:114,fg+:254,bg+:236,hl+:114
+        --color=info:180,prompt:75,pointer:204,marker:114,spinner:180,header:59'
+fi
+
+# Prompt
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+path=("$HOME/.local/bin" $path)
+
+powerline_precmd() {
+    PS1="$(powerline-shell --shell zsh $?)"
+}
+
+install_powerline_precmd() {
+    for s in "${precmd_functions[@]}"; do
+        if [ "$s" = "powerline_precmd" ]; then
+            return
+        fi
+    done
+    precmd_functions+=(powerline_precmd)
+}
+
+if [ "$TERM" != "linux" ] && command -v powerline-shell > /dev/null 2>&1; then
+    install_powerline_precmd
+fi
