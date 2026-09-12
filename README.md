@@ -25,6 +25,7 @@ Setting and keymappings for
 | `.vimrc` | `~/.vimrc` |
 | `claude/statusline.sh` | `~/.claude/statusline.sh` (symlink) |
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` (symlink) |
+| `claude/settings.json` | merged into `~/.claude/settings.json` |
 | `macos/defaults.sh` | run once, writes to `defaults` |
 
 Setup, on macOS or Linux:
@@ -35,9 +36,10 @@ cd dotfiles
 ./install.sh
 ```
 
-`install.sh` only creates symlinks. It applies `macos/defaults.sh` on macOS, and
-reports any dependency it cannot find on `$PATH`. It installs nothing and is
-safe to re-run.
+`install.sh` creates symlinks and merges `claude/settings.json` into
+`~/.claude/settings.json` with `jq`, keeping any keys already there. It applies
+`macos/defaults.sh` on macOS, and reports any dependency it cannot find on
+`$PATH`. It installs no packages and is safe to re-run.
 
 Dependencies, installed however the platform prefers:
 
@@ -50,10 +52,11 @@ Dependencies, installed however the platform prefers:
 | `jq` | the Claude status line |
 | `powerline-shell` | the prompt, via `pipx install powerline-shell` |
 | `xclip` or `wl-copy` | tmux clipboard on Linux |
+| `fonts-powerline` | the prompt's separator glyphs on Linux |
 
-Then set the login shell, install a Powerline-patched or Nerd Font and select it
-in the terminal, and add the `statusLine` block below to
-`~/.claude/settings.json`:
+Then set the login shell. The prompt needs the Powerline glyphs in
+`U+E0A0`-`U+E0B3`: on Linux `fonts-powerline` adds them to whatever font the
+terminal already uses, and on macOS SF Mono Terminal already has them.
 
 ```sh
 chsh -s "$(command -v zsh)"
@@ -63,10 +66,12 @@ chsh -s "$(command -v zsh)"
 
 | Thing | Handling |
 | --- | --- |
-| Clipboard | tmux yanks to `pbcopy`, `xclip` or `wl-copy`, whichever exists |
+| Clipboard | tmux yanks to `pbcopy` on macOS, else `wl-copy` under Wayland or `xclip` under X11 |
+| `set-clipboard` | left on for terminals that honour OSC 52; VTE (Ptyxis, GNOME Terminal) ignores it |
 | Homebrew | `zshrc` evaluates `shellenv` only if brew is present |
 | fzf | uses `fzf --zsh` on 0.48+, otherwise sources the distro's key-binding files |
 | `macos/defaults.sh` | run by `install.sh` on macOS only |
+| Prompt glyphs | `fonts-powerline` on Linux, built into SF Mono Terminal on macOS |
 
 ## Shell
 
