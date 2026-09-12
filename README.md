@@ -35,19 +35,29 @@ cd dotfiles
 ./install.sh
 ```
 
-`install.sh` installs packages for the detected platform (Homebrew, apt, pacman
-or dnf), creates every symlink above, and runs `macos/defaults.sh` only on
-macOS. It is idempotent, so it is safe to re-run. `./install.sh --links-only`
-skips package installation.
+`install.sh` only creates symlinks. It applies `macos/defaults.sh` on macOS, and
+reports any dependency it cannot find on `$PATH`. It installs nothing and is
+safe to re-run.
 
-It cannot do three things for you:
+Dependencies, installed however the platform prefers:
+
+| Package | For |
+| --- | --- |
+| `zsh` | the shell itself |
+| `tmux`, `vim`, `git` | the configs in this repo |
+| `fzf` | `Ctrl-R` / `Ctrl-T` / `Alt-C` |
+| `ripgrep` | fzf's file source |
+| `jq` | the Claude status line |
+| `powerline-shell` | the prompt, via `pipx install powerline-shell` |
+| `xclip` or `wl-copy` | tmux clipboard on Linux |
+
+Then set the login shell, install a Powerline-patched or Nerd Font and select it
+in the terminal, and add the `statusLine` block below to
+`~/.claude/settings.json`:
 
 ```sh
 chsh -s "$(command -v zsh)"
 ```
-
-install a Powerline-patched or Nerd Font and select it in the terminal, and add
-the `statusLine` block below to `~/.claude/settings.json`.
 
 ### Platform differences
 
